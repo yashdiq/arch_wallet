@@ -11,7 +11,7 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
- - Create <root>/.env contains ARCH_WALLET_DATABASE_PASSWORD=<your pg user password>
+  - Create <root>/.env contains ARCH_WALLET_DATABASE_PASSWORD=<your pg user password>
 
 * Database creation
   - Change database configuration in config/database.yml as your own
