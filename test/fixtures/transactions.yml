@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 9.99
+  wallet_from: one
+  wallet_to: one
+  type: 1
+  status: 1
+  pin: 1
+
+two:
+  amount: 9.99
+  wallet_from: two
+  wallet_to: two
+  type: 1
+  status: 1
+  pin: 1
