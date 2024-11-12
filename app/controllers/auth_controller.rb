@@ -1,13 +1,16 @@
 class AuthController < ApplicationController
-  
+  include ApiKeyAuthentication
+
   def create
-    @user = User.find_by(username: params[:username])
-    logger.debug("User: #{params[:username]} #{@user}")
-    if @user.present? && @user.authenticate(params[:password])
-      session[:user_id] = @user.id
-      render json: { user: @user, session: session, message: 'Logged in!'}, status: 200
-    else
-      render json: { error: 'Username or password is invalid!', message: @user }, status: :bad_request
+    authenticate_with_http_basic do |username, password|
+      @user = User.find_by username: username
+
+      if @user.present? && @user&.authenticate(password)
+        api_key = @user.api_keys.create! token: SecureRandom.hex
+        render json: { api_key: api_key, message: "Logged in!" }, status: :created and return
+      end
     end
+
+    render json: { error: "Username or password is invalid!" }, status: :unauthorized
   end
 end

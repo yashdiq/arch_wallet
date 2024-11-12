@@ -1,44 +1,25 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
-  
+  include ApiKeyAuthentication
+
+  prepend_before_action :authenticate_with_api_key!, only: [ :index, :show ]
+
+  before_action :set_user, only: [ :show ]
+
   def index
     @users = User.all
     render json: @users
   end
 
   def show
-    render json: @user
-  end
-
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      render json: @user, status: :created
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-
-  def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    @user.destroy
-    head :no_content
+    Rails.logger.info "Wallet from #{@user}"
+    render json: @user, include: :wallet
   end
 
   private
 
   def set_user
+    @wallet = Wallet.find_by user_id: params[:id]
     @user = User.find(params[:id])
-  end
-
-  def user_params
-    params.require(:user).permit(:full_name, :username, :email)
+    @user.wallet = @wallet
   end
 end
